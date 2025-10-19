@@ -35,11 +35,17 @@
             text-align: center;
         }
 
+        /* Logo */
+        .logo {
+            max-height: 80px;
+            margin-bottom: 1rem;
+        }
+
         /* Form Title */
         h1 {
             color: #1a73e8; /* Google Blue */
-            margin-bottom: 2rem;
-            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
             text-align: center;
         }
 
@@ -160,6 +166,7 @@
 <body>
 
     <div class="form-container">
+        <img src="devfest-logo.svg" alt="DevFest Logo" class="logo">
         <h1>DevFest Beirut 2025</h1>
 
         <div id="loading-state" class="loading-state">
@@ -356,6 +363,15 @@
                     postPayload.event_survey_entry.fields['1489911'] = familiaritySelect.options[familiaritySelect.selectedIndex].text;
                     postPayload.event_survey_entry.fields['1489912'] = educationInput.value;
                     postPayload.company = educationInput.value; 
+
+                    // Add participation choice to the payload
+                    const selectedParticipationValue = document.querySelector('input[name="participation"]:checked').value;
+                    const participationMap = {
+                        'vibathon': 'Vibathon',
+                        'workshop': 'Workshop',
+                        'none': 'I will attend Talks only'
+                    };
+                    postPayload.event_survey_entry.fields['1597696'] = participationMap[selectedParticipationValue];
                     
                     const submissionApiUrl = 'https://gdg.community.dev/api/event/99354/waitlist/list/';
                     
@@ -427,4 +443,3 @@
 
 </body>
 </html>
-
