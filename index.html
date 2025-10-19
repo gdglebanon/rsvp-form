@@ -273,6 +273,9 @@
                 try {
                     const urlParams = new URLSearchParams(window.location.search);
                     let id = urlParams.get('id');
+                    if (!id) {
+                        throw new Error("No user ID provided in the URL.");
+                    }
                     const apiUrl = `https://script.google.com/macros/s/AKfycbzeT95NMjk6bWTw9sHhp0y0VLimBrWliFgyZNpRQtRQHyxl59lYXo_M9zAbupUc-XSX/exec?id=${id}`;
                     
                     const response = await fetch(apiUrl);
@@ -285,6 +288,21 @@
                     const payload = responseData && responseData.status === 'success' ? responseData.data : null;
                     if (!payload) throw new Error("Received invalid data structure from the API.");
                     
+                    // --- Link Expiration Check ---
+                    if (payload.emailStatus && payload.emailStatus.startsWith("SENT: ")) {
+                        const dateString = payload.emailStatus.replace("SENT: ", "");
+                        const emailSentDate = new Date(dateString);
+                        const now = new Date();
+                        const fortyEightHoursInMs = 48 * 60 * 60 * 1000;
+                        const diffInMs = now.getTime() - emailSentDate.getTime();
+
+                        // Check if date parsing is valid and if the link has expired
+                        if (!isNaN(emailSentDate.getTime()) && diffInMs > fortyEightHoursInMs) {
+                            throw new Error("This registration link has expired.");
+                        }
+                    }
+                    // --- End of Link Expiration Check ---
+
                     fetchedUserData = payload; // Store the fetched user data
                     
                     if (Array.isArray(payload.choices)) {
@@ -309,6 +327,7 @@
                     console.error("Error fetching or populating form:", error);
                     loadingState.style.display = 'none';
                     errorState.style.display = 'block';
+                    errorState.querySelector('p').textContent = error.message;
                 }
             };
 
@@ -351,9 +370,9 @@
                         // Directly check the raw text for the specific error message.
                         if (postResponse.status === 400 && errorText.includes("already on the waitlist")) {
                              // Instead of showing a success page, show an error message on the form.
-                             submissionStatus.textContent = "This email is already on the waitlist. No further action is required.";
+                             submissionStatus.textContent = "This email is already in the list. No further action is required.";
                              submissionStatus.className = 'error'; // Use the existing error class for styling.
-                             submitButton.textContent = 'Already on Waitlist'; // Update button text.
+                             submitButton.textContent = 'Already on list'; // Update button text.
                              // Keep the button disabled and the form visible.
                         } else {
                             // For all other errors, throw a generic error to be caught below.
@@ -364,10 +383,20 @@
                             <div style="text-align: center;">
                                 <p style="font-size: 2.5em; margin-bottom: 1rem;">✅</p>
                                 <p style="font-weight: bold; font-size: 1.2em;">You are now confirmed to attend DevFest!</p>
-                                <p>You will receive an email with your QR Code link.</p>
-                                <p style="font-size: 0.9em; color: #5f6368; margin-top: 1.5rem; text-align: left;">
-                                    <strong>Please note:</strong> The ticket is not transferable. In case of no-show, you might be restricted from attending future events. Please keep an eye on any communication emails from us.
-                                </p>
+                                <p>You will receive an email with your QR Code link shortly.</p>
+                                
+                                <div style="margin-top: 1.5rem; padding: 1rem; border: 1px solid #ddd; border-radius: 8px; background-color: #f8f9fa;">
+                                    <p style="font-size: 1.1em; font-weight: bold; margin-bottom: 0.5rem;">Your Confirmation Code (OTP):</p>
+                                    <p style="font-size: 1.5em; font-weight: 700; color: #1a73e8; letter-spacing: 2px;">${fetchedUserData.OTP}</p>
+                                    <p style="font-size: 0.9em; margin-top: 0.5rem;">Please save this code for your reference.</p>
+                                </div>
+
+                                <div style="margin-top: 1.5rem; text-align: left; font-size: 0.9em; color: #5f6368;">
+                                    <p>If you do not receive the confirmation email within the next few hours, please send a message with your name and OTP to our WhatsApp support at <a href="https://wa.me/96179145458" target="_blank" rel="noopener noreferrer">79 145 458</a>.</p>
+                                    <p style="margin-top: 1rem;">
+                                        <strong>Please note:</strong> The ticket is not transferable. In case of no-show, you might be restricted from attending future events. Please keep an eye on any communication emails from us.
+                                    </p>
+                                </div>
                             </div>
                         `;
                         submissionStatus.className = 'success';
