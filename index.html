@@ -167,7 +167,7 @@
 
     <div class="form-container">
         <img src="devfest-logo.svg" alt="DevFest Logo" class="logo">
-        <h1>DevFest Beirut 2025</h1>
+        <h1>DevFest.. One step away!</h1>
 
         <div id="loading-state" class="loading-state">
             <p>Loading your information, please wait...</p>
@@ -186,16 +186,17 @@
                 </select>
             </div>
 
-            <!-- Education / Organization Field (Hidden from view) -->
-            <div class="form-group" id="follow-up-question" style="display: none;">
+           <!-- Education / Organization Field (Read-only) -->
+            <div class="form-group" id="follow-up-question">
                  <label for="education_input">Education / Organization</label>
+                                     <small class="label-note">If you wish to change this text in the badge please send us email on info@gdglebanon.com</small>
                  <input type="text" id="education_input" name="education_input" placeholder="e.g., Lebanese American University" readonly>
             </div>
             
             <!-- Optional Participation Question -->
             <div class="form-group" id="participation-question" style="display: none;">
                 <label>Do you want to participate in one of the below?
-                    <small class="label-note">Laptop mandatory and securing the spot will be early morning. Only 1 spot per person (Timings: 10-12 ; 12:30-14:30 or 15:15-17:15)</small>
+                    <small class="label-note">Laptop mandatory and securing the spot will be early morning. Only 1 spot per person for Workshop/Challenge (Timings: 10-12 ; 12:30-14:30 or 15:15-17:15)</small>
                 </label>
                 <div class="radio-group">
                     <label><input type="radio" name="participation" value="vibathon"> Vibathon</label>
@@ -205,7 +206,7 @@
             </div>
 
             <!-- Submit Button -->
-            <button type="submit" class="submit-btn" disabled>Submit Application</button>
+            <button type="submit" class="submit-btn" disabled>Confirm Attendace</button>
         </form>
         <div id="submission-status"></div>
     </div>
@@ -412,6 +413,7 @@
                                     <p style="margin-top: 1rem;">
                                         <strong>Please note:</strong> The ticket is not transferable. In case of no-show, you might be restricted from attending future events. Please keep an eye on any communication emails from us.
                                     </p>
+                                    <p>See you on Saturday at LAU, Beirut Campus!</p>
                                 </div>
                             </div>
                         `;
@@ -443,3 +445,4 @@
 
 </body>
 </html>
+
