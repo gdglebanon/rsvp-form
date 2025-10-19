@@ -196,11 +196,11 @@
             <!-- Optional Participation Question -->
             <div class="form-group" id="participation-question" style="display: none;">
                 <label>Do you want to participate in one of the below?
-                    <small class="label-note">Laptop mandatory and securing the spot will be early morning. Only 1 spot per person for Workshop/Challenge (Timings: 10-12 ; 12:30-14:30 or 15:15-17:15)</small>
+                    <small class="label-note">Laptop mandatory and securing the spot will be early morning. Only 1 spot per person for Workshop/Challenge (Timings: 10-12 ; 12:30-14:30 or 15:15-17:15) in the rest time you will attend talks annd visit companies booths</small>
                 </label>
                 <div class="radio-group">
-                    <label><input type="radio" name="participation" value="vibathon"> Vibathon</label>
-                    <label><input type="radio" name="participation" value="workshop"> Workshop</label>
+                    <label><input type="radio" name="participation" value="workshop"> Practical hands-on Workshop</label>
+                    <label><input type="radio" name="participation" value="vibathon"> Vibathon Challenge with AI and Vibecoding agent</label>                    
                     <label><input type="radio" name="participation" value="none" checked> I will attend Talks only</label>
                 </div>
             </div>
@@ -284,7 +284,7 @@
                     if (!id) {
                         throw new Error("No user ID provided in the URL.");
                     }
-                    const apiUrl = `https://script.google.com/macros/s/AKfycbzeT95NMjk6bWTw9sHhp0y0VLimBrWliFgyZNpRQtRQHyxl59lYXo_M9zAbupUc-XSX/exec?id=${id}`;
+                    const apiUrl = `https://script.google.com/macros/s/AKfycbya3qV3NYY0IUw9y7m4ZFup-hcR_9DbYo6iPciA7rkBwWJ2tXvu0DfDIGOW-xC1A0wp/exec?id=${id}`;
                     
                     const response = await fetch(apiUrl);
                     if (!response.ok) throw new Error(`API request failed with status: ${response.status}`);
@@ -445,4 +445,3 @@
 
 </body>
 </html>
-
