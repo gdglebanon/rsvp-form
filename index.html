@@ -347,22 +347,17 @@
                     });
 
                     if (!postResponse.ok) {
-                        const errorData = await postResponse.text();
-                        if (postResponse.status === 400 && errorData.includes("already on the waitlist")) {
-                             submissionStatus.innerHTML = `
-                                <div style="text-align: center;">
-                                    <p style="font-size: 2.5em; margin-bottom: 1rem;">✅</p>
-                                    <p style="font-weight: bold; font-size: 1.2em;">You are already confirmed!</p>
-                                    <p>This email is on the list for DevFest. You will receive an email with your QR Code link.</p>
-                                    <p style="font-size: 0.9em; color: #5f6368; margin-top: 1.5rem; text-align: left;">
-                                        <strong>Please note:</strong> The ticket is not transferable. In case of no-show, you might be restricted from attending future events. Please keep an eye on any communication emails from us.
-                                    </p>
-                                </div>
-                            `;
-                            submissionStatus.className = 'success';
-                            registrationForm.style.display = 'none';
+                        const errorText = await postResponse.text();
+                        // Directly check the raw text for the specific error message.
+                        if (postResponse.status === 400 && errorText.includes("already on the waitlist")) {
+                             // Instead of showing a success page, show an error message on the form.
+                             submissionStatus.textContent = "This email is already on the waitlist. No further action is required.";
+                             submissionStatus.className = 'error'; // Use the existing error class for styling.
+                             submitButton.textContent = 'Already on Waitlist'; // Update button text.
+                             // Keep the button disabled and the form visible.
                         } else {
-                            throw new Error(`Submission failed: ${postResponse.status} ${errorData}`);
+                            // For all other errors, throw a generic error to be caught below.
+                            throw new Error(`Submission failed: ${postResponse.status} ${errorText}`);
                         }
                     } else {
                         submissionStatus.innerHTML = `
