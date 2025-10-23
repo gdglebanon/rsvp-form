@@ -296,20 +296,22 @@
                     const payload = responseData && responseData.status === 'success' ? responseData.data : null;
                     if (!payload) throw new Error("Received invalid data structure from the API.");
                     
-                    // --- Link Expiration Check ---
-                    if (payload.emailStatus && payload.emailStatus.startsWith("SENT: ")) {
-                        const dateString = payload.emailStatus.replace("SENT: ", "");
-                        const emailSentDate = new Date(dateString);
-                        const now = new Date();
-                        const fortyEightHoursInMs = 48 * 60 * 60 * 1000;
-                        const diffInMs = now.getTime() - emailSentDate.getTime();
-
-                        // Check if date parsing is valid and if the link has expired
-                        if (!isNaN(emailSentDate.getTime()) && diffInMs > fortyEightHoursInMs) {
-                            throw new Error("This registration link has expired.");
-                        }
+                    // --- Acceptance Deadline Check ---
+                    const now = new Date();
+                    
+                    // Define the hard deadline.
+                    // IMPORTANT: 
+                    // 1. Set the correct Year (e.g., 2025).
+                    // 2. Month is 0-indexed: 0=Jan, 1=Feb, ..., 9=Oct.
+                    const deadline = new Date(2025, 9, 24, 12, 0, 0); // This is Oct 24, 2025 at 12:00:00 PM
+                    
+                    // Check if the current time is past the deadline
+                    if (now > deadline) {
+                        throw new Error("This link has expired. The acceptance period ended on October 24th at 12:00 PM.");
                     }
-                    // --- End of Link Expiration Check ---
+                    
+                    // If the code reaches here, the deadline has not passed.
+                    // ... you can continue with the rest of your logic ...
 
                     fetchedUserData = payload; // Store the fetched user data
                     
