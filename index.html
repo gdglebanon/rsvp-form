@@ -306,13 +306,6 @@
                     const deadline = new Date(2025, 9, 24, 16, 00, 0); // This is Oct 24, 2025 at 12:00:00 PM
                     
   
-
-                     // --- NEW: Experience Check ---
-                    // Check if the experience field matches the required value.
-                    if (payload.company !== 'Lebanese American University') {
-                        throw new Error("RSVP Confirmation closed");
-                    }
-                    // --- End of new check ---
                     // Check if the current time is past the deadline
                     if (now > deadline) {
                         throw new Error("This link has expired. The acceptance period ended on October 24th at 12:00 PM.");
