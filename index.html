@@ -296,27 +296,37 @@
                     const payload = responseData && responseData.status === 'success' ? responseData.data : null;
                     if (!payload) throw new Error("Received invalid data structure from the API.");
                     
-                    // --- Acceptance Deadline Check ---
-                    const now = new Date();
+                      // --- Acceptance Logic Check ---
                     
-                    // Define the hard deadline.
-                    // IMPORTANT: 
-                    // 1. Set the correct Year (e.g., 2025).
-                    // 2. Month is 0-indexed: 0=Jan, 1=Feb, ..., 9=Oct.
-                    const deadline = new Date(2025, 9, 24, 19, 50, 0); // This is Oct 24, 2025 at 12:00:00 PM
+                    // --- Acceptance Logic Check ---
                     
-                    if (payload.company !== 'Lebanese American University') {
-                            throw new Error("RSVP Confirmation closed");
-                        }
-
-                    // Check if the current time is past the deadline
-                    if (now > deadline) {
-                        // --- NEW: Experience Check ---
-                        // Check if the experience field matches the required value.
-                        // --- End of new check ---
-                        throw new Error("This link has expired. The acceptance period ended on October 24th at 12:00 PM.");
+                    // Define the cutoff date: October 25, 2025, at 00:00:00
+                    // Note: Month is 0-indexed, so 9 is October.
+                    const cutoffDate = new Date(2025, 9, 25, 0, 0, 0); 
+                    
+                    // Convert the payload's string timestamp (e.g., "10/25/2025") into a Date object.
+                    // This is necessary for a correct comparison.
+                    const payloadDate = new Date(payload.timestamp);
+                    
+                    // Your rule: Allow if (company is LAU) OR (timestamp is BEFORE Oct 25)
+                    //
+                    // Therefore, the ERROR case is the exact opposite:
+                    // Throw an error ONLY IF:
+                    // 1. company is NOT 'Lebanese American University'
+                    // AND
+                    // 2. payloadDate is ON or AFTER the cutoffDate (>=)
+                    //
+                    if (payload.company !== 'Lebanese American University' && payloadDate <= cutoffDate) {
+                        // This error triggers for non-LAU submissions on or before Oct 25, 2025.
+                        throw new Error("RSVP Confirmation closed. Submissions are only accepted from Lebanese American University or if timestamped before October 25, 2025.");
                     }
-                    // If the code reaches here, the deadline has not passed.
+                    
+                    // If the code reaches here, the submission is valid.
+                    // (It's either from LAU, or it was submitted before Oct 25th).
+                    // ... you can continue with the rest of your logic ...
+                    
+                    // If the code reaches here, the submission is valid
+                    // (either from LAU or submitted before the cutoff date).
                     // ... you can continue with the rest of your logic ...
 
                     fetchedUserData = payload; // Store the fetched user data
