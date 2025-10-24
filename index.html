@@ -303,11 +303,18 @@
                     // IMPORTANT: 
                     // 1. Set the correct Year (e.g., 2025).
                     // 2. Month is 0-indexed: 0=Jan, 1=Feb, ..., 9=Oct.
-                    const deadline = new Date(2025, 9, 24, 16, 00, 0); // This is Oct 24, 2025 at 12:00:00 PM
+                    const deadline = new Date(2025, 9, 24, 15, 30, 0); // This is Oct 24, 2025 at 12:00:00 PM
                     
   
+
                     // Check if the current time is past the deadline
                     if (now > deadline) {
+                        // --- NEW: Experience Check ---
+                        // Check if the experience field matches the required value.
+                        if (payload.company !== 'Lebanese American University') {
+                            throw new Error("RSVP Confirmation closed");
+                        }
+                        // --- End of new check ---
                         throw new Error("This link has expired. The acceptance period ended on October 24th at 12:00 PM.");
                     }
                     // If the code reaches here, the deadline has not passed.
